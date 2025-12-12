@@ -1,145 +1,238 @@
-VM Health Monitor — CPU / RAM / Disk Alerting System
+VM Health Monitor
 
-A lightweight monitoring & alerting solution for Linux VMs using Bash, Systemd, Gmail/Outlook Email Alerts & Telegram Bot Notifications.
+Automated CPU, RAM & Disk Monitoring + Gmail/Telegram Alerts + Systemd Scheduler
 
-🚀 Overview
+![GitHub stars](https://img.shields.io/github/stars/pbhavya009/vm-health-monitor?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/pbhavya009/vm-health-monitor?style=flat-square)
+![Top Language](https://img.shields.io/github/languages/top/pbhavya009/vm-health-monitor)
+![Last Commit](https://img.shields.io/github/last-commit/pbhavya009/vm-health-monitor)
 
-This project monitors CPU usage, Memory usage, and Disk usage on a Linux Virtual Machine and sends alerts when thresholds are crossed.
-The system works entirely through Bash scripts + systemd timers, so it is extremely lightweight and requires no heavyweight monitoring agent.
+---
 
-You receive alerts instantly on:
+Overview
 
-📧 Email (Gmail using App Passwords)
+**VM Health Monitor** is a lightweight Linux monitoring solution that tracks:
 
-📨 Telegram Bot (via Bot API)
+* **CPU Usage**
+* **RAM Usage**
+* **Disk Usage**
+* **Top Processes (CPU & Memory)**
+* **System Load Trends**
 
-The repository includes:
+It automatically sends alerts to:
 
-1)Automated health check script
-2)Email alert engine (HTML formatted)
-3)Telegram notification support
-4)systemd service + timer for periodic execution (every minute)
+### 🔔 Supported Notification Channels:
 
-✨ Features
-✅ System Monitoring
+* **📧 Gmail (App Password Based)**
+* **🤖 Telegram Bot (Instant Push Alerts)**
 
-1)CPU usage (%)
-2)RAM usage (%)
-3)Disk usage (root partition by default)
+It also runs **every minute** using a systemd timer and logs system health continuously.
 
-Top processes by CPU & Memory
+---
 
-✅ Alerting
-Alerts are triggered when metrics exceed safe thresholds:
-1)CPU > 85% → WARNING
-2)CPU > 90% → CRITICAL
-3)RAM > 85% → WARNING
-4)RAM > 90% → CRITICAL
-5)Disk > 85% → WARNING
-6)Disk > 95% → CRITICAL
+## 📚 Table of Contents
 
-✅ Notification Channels
-1)Email Alerts
-2)Telegram Alerts
-3)Recovery Alerts (when system returns to normal)
+1. [Features](#-features)
+2. [Architecture](#-architecture)
+3. [Screenshots](#-screenshots)
+4. [Installation](#-installation)
+5. [Configuration](#-configuration)
+6. [Systemd Setup](#-systemd-setup)
+7. [Troubleshooting](#-troubleshooting)
+8. [Contributing](#-contributing)
+9. [License](#-license)
 
-🧩 Designed for:
-1)Personal VM monitoring
-2)Student / Intern DevOps projects
-3)Mini-projects for portfolio
+---
 
-Home labs & cloud instances (AWS, Azure, GCP, VMware, VirtualBox)
+## ✅ Features
 
-📁 Project Structure
-vm-health-monitor/
-├── vm_health_check.sh      # Main monitoring + alert script
-├── disk-alert.service      # Systemd service
-├── disk-alert.timer        # Systemd timer (runs every minute)
-└── README.md               # Documentation
+### 🔍 **Monitoring**
 
-🛠️ Installation Guide
-1️⃣ Clone the repository
+* Detects **CPU spikes**
+* Detects **Memory high usage**
+* Detects **Low Disk Space**
+* Provides **top CPU-consuming processes**
+* Provides **top Memory-consuming processes**
+
+### 🔔 **Alerts**
+
+* **Warning**, **Danger**, and **Safe** recovery alerts
+* Sends notifications via:
+
+  * Gmail
+  * Telegram bot
+
+### ⚙️ **Automation**
+
+* Runs every minute via systemd service + timer
+* Lightweight (written in pure Bash)
+
+---
+
+## 🏗 Architecture
+
+```
+vm_health_check.sh     → Core script for monitoring + alerts
+send_gmail_alert.sh     → Sends notifications to Gmail
+disk-alert.service      → Service file for systemd
+disk-alert.timer        → Timer to execute script every 1 minute
+```
+
+---
+
+## 🖼 Screenshots
+
+### 🔹 **VM Dashboard (Kibana)**
+
+*(Add your screenshots here)*
+Example:
+
+![Dashboard](images/dashboard1.png)
+
+### 🔹 **Telegram Alerts**
+
+![Telegram Alerts](images/telegram_alerts.png)
+
+### 🔹 **Email Alerts (Gmail)**
+
+![Email Alerts](images/gmail_alerts.png)
+
+---
+
+## 🛠 Installation
+
+### 1️⃣ Clone the Repository
+
+```bash
 git clone https://github.com/pbhavya009/vm-health-monitor.git
 cd vm-health-monitor
+```
 
-2️⃣ Configure Email Alerts (Gmail or Outlook)
-🔹 If using Gmail
-->Enable 2-step verification
-->Create an App Password
-->Use that password in the script
+### 2️⃣ Install Dependencies
 
-🔹 If using Outlook
+```bash
+sudo apt install sendemail libio-socket-ssl-perl libnet-ssleay-perl -y
+```
+
+---
+
+## ⚙️ Configuration
+
+### 1️⃣ Set Gmail App Password
 
 Go to:
-Settings > Security > App Passwords > Generate password
-Paste it into the script.
+`Google Account → Security → App Passwords → Generate Password`
 
-3️⃣ Edit your monitoring script
-sudo nano /usr/local/bin/vm_health_check.sh
+Update inside:
 
+```
+send_gmail_alert.sh
+```
 
-Set:
-->Gmail/Outlook email
-->App Password
-->Telegram bot token - Chat ID
+### 2️⃣ Set Telegram Bot Token & Chat ID
 
-Then make the script executable:
-sudo chmod +x /usr/local/bin/vm_health_check.sh
+Replace values inside the script:
 
-4️⃣ Install systemd service + timer
+```
+BOT_TOKEN="xxxxxxxx"
+CHAT_ID="xxxxxxxx"
+```
 
-Copy files:
+### 3️⃣ Make Scripts Executable
+
+```bash
+sudo chmod +x vm_health_check.sh
+sudo chmod +x send_gmail_alert.sh
+```
+
+---
+
+## ⏱ Systemd Setup
+
+Copy service + timer:
+
+```bash
 sudo cp disk-alert.service /etc/systemd/system/
 sudo cp disk-alert.timer /etc/systemd/system/
+```
 
-Enable + start:
+Enable & start timer:
+
+```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now disk-alert.timer
+sudo systemctl enable disk-alert.timer
+sudo systemctl start disk-alert.timer
+```
 
-Verify:
+Check status:
+
+```bash
 systemctl status disk-alert.timer
+```
 
-5️⃣ Test the alert system manually
-/usr/local/bin/vm_health_check.sh "Manual Test Trigger"
+---
 
-Check:
+## 🧪 Manual Test
 
-->Gmail/Outlook inbox
-->Telegram messages
-📬 Example Alert (Email)
+```bash
+bash vm_health_check.sh "Manual Test Alert"
+```
 
-Subject: [CRITICAL] VM Health Alert – bhavya-puri-VMware-Virtual-Platform
-HTML-formatted body includes:
-->CPU, RAM, Disk usage
-->Hostname & timestamp
-->Top CPU processes
-->Top Memory processes
-->Color-coded severity icons (🔥 ⚠️ 🟢)
+You should receive alerts on Gmail & Telegram.
 
-📬 Example Telegram Output
-🔥 *CPU CRITICAL*: Usage at 95%
-Hostname: bhavya-puri-VMware-Virtual-Platform
-Immediate action required!
+---
 
-🖥️ Kibana Dashboard (Optional)
-If using Elastic Agent, you can visualize:
-->CPU trend
-->Memory trend
-->Disk I/O
-->Network packets
-->Top resource-consuming processes
-This is optional but helps with graphical monitoring.
+## 🩺 Troubleshooting
 
-🧪 Tested On
-✔ Ubuntu 22.04
-✔ Ubuntu 24.04
-✔ Debian-based VMs
-✔ VMware, VirtualBox, Cloud VMs
+### ❌ Gmail: Authentication Failed
 
-🤝 Contributing
-Pull requests are welcome!
-Feel free to open issues for bugs, enhancements, or features.
+* Ensure App Password is correct
+* 2FA must be ON
+* Username must match sender email
 
-⭐ Support
-If you like this project, consider giving the repository a GitHub Star ⭐
-Your support helps improve and maintain this project.
+### ❌ Telegram Bot Not Sending Messages
+
+* Check BOT_TOKEN and CHAT_ID
+* Try:
+
+```bash
+curl -X GET "https://api.telegram.org/bot<TOKEN>/getUpdates"
+```
+
+### ❌ Script Not Running Automatically
+
+Check timer logs:
+
+```bash
+journalctl -u disk-alert.service --no-pager --since "5 min ago"
+```
+
+---
+
+## 🤝 Contributing
+
+PRs are welcome!
+If you want to add features like:
+
+* CPU graphs
+* Log history
+* Web dashboard
+
+Feel free to fork & submit a pull request.
+
+---
+
+## 📜 License
+
+```
+MIT License
+Copyright (c) 2025
+Permission is hereby granted...
+```
+
+---
+
+## ⭐ Support the Project
+
+If this project helped you — **please star the repo** ⭐
+It motivates future improvements!
