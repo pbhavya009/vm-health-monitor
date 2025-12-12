@@ -83,19 +83,17 @@ disk-alert.timer        → Timer to execute script every 1 minute
 ## 🖼 Screenshots
 
 ### 🔹 **VM Dashboard (Kibana)**
-
-*(Add your screenshots here)*
 Example:
+<img width="1920" height="1080" alt="Dashboard 1" src="https://github.com/user-attachments/assets/51ab1cd4-b708-409c-adfc-0f20f15ce844" />
+<img width="1920" height="1080" alt="Dashboard 2" src="https://github.com/user-attachments/assets/f816228c-ba26-48c9-b9b2-ff349e05dc73" />
 
-![Dashboard](images/dashboard1.png)
 
 ### 🔹 **Telegram Alerts**
+<img width="960" height="540" alt="Telegram 1" src="https://github.com/user-attachments/assets/adfaf581-7dfe-46b3-82ba-c57c6bd2f4e5" />
 
-![Telegram Alerts](images/telegram_alerts.png)
 
 ### 🔹 **Email Alerts (Gmail)**
-
-![Email Alerts](images/gmail_alerts.png)
+<img width="1920" height="1080" alt="Gmail 1" src="https://github.com/user-attachments/assets/e6defdcf-931e-4f20-a55e-57e8d84858ff" />
 
 ---
 
@@ -219,16 +217,6 @@ If you want to add features like:
 * Web dashboard
 
 Feel free to fork & submit a pull request.
-
----
-
-## 📜 License
-
-```
-MIT License
-Copyright (c) 2025
-Permission is hereby granted...
-```
 
 ---
 
