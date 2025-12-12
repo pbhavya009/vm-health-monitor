@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Disk Alert Script Every Minute
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=60sec
+
+[Install]
+WantedBy=timers.target

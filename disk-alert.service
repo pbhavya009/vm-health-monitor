@@ -1,0 +1,7 @@
+[Unit]
+Description=Disk Alert Script
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/vm_health_check.sh
+
