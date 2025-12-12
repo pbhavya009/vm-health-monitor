@@ -143,6 +143,3 @@ Feel free to open issues for bugs, enhancements, or features.
 ⭐ Support
 If you like this project, consider giving the repository a GitHub Star ⭐
 Your support helps improve and maintain this project.
-Just tell me and I’ll generate them!
-
-ChatGPT can make mistakes. Check important info. See Cookie Preferences.
